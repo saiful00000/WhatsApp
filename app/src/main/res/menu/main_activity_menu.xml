@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item android:title="Find Friend"
+        android:id="@+id/menuitem_find_friend_id"></item>
+
+    <item android:title="Logout"
+        android:id="@+id/menu_item_logout_id"></item>
+
+    <item android:title="Settings"
+        android:id="@+id/menu_item_settings_id"></item>
+
+</menu>
