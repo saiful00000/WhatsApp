@@ -18,6 +18,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.Objects;
+
 public class LogInActivity extends AppCompatActivity {
 
     private EditText loginEmailEt, loginPassEt;
@@ -25,7 +27,6 @@ public class LogInActivity extends AppCompatActivity {
     private TextView createNewAcTv;
 
 
-    private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
 
     private ProgressDialog progressDialog;
@@ -37,7 +38,6 @@ public class LogInActivity extends AppCompatActivity {
 
 
         firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = firebaseAuth.getCurrentUser();
 
         findById();
 
@@ -78,7 +78,7 @@ public class LogInActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                                 sentUserToMainActivity();
                             } else {
-                                String errorMsg = task.getException().toString();
+                                String errorMsg = Objects.requireNonNull(task.getException()).toString();
                                 progressDialog.dismiss();
                                 Toast.makeText(LogInActivity.this, "Error : "+ errorMsg, Toast.LENGTH_SHORT).show();
                             }
@@ -99,16 +99,6 @@ public class LogInActivity extends AppCompatActivity {
 
     private void sentUserToMainActivity() {
         startActivity(new Intent(getApplicationContext(), MainActivity.class));
-    }
-
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        if (currentUser != null) {
-            startActivity(new Intent(getApplicationContext(), MainActivity.class));
-        }
     }
 
 
