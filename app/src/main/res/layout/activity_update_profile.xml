@@ -6,53 +6,50 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".RegisterActivity">
+    tools:context=".UpdateProfileActivity">
 
 
-    <EditText
-        android:id="@+id/registerr_email_id"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="17dp"
-        android:layout_marginRight="17dp"
-        android:background="@drawable/inputs"
-        android:hint="Email"
-        android:padding="4dp"
-        android:textSize="20sp" />
-
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_pic_imageview_id"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_account_circle_black_24dp" />
 
     <EditText
-        android:id="@+id/register_password_id"
+        android:id="@+id/username_et_id"
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginLeft="17dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="17dp"
         android:background="@drawable/inputs"
-        android:hint="Password"
+        android:hint="User name"
         android:padding="4dp"
         android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/already_registered_tv_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="left"
+    <EditText
+        android:id="@+id/userstatus_et_id"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
         android:layout_marginLeft="17dp"
-        android:layout_marginTop="10dp"
-        android:text="Already have account ? Login."
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="15sp" />
+        android:layout_marginTop="10sp"
+        android:layout_marginRight="17dp"
+        android:background="@drawable/inputs"
+        android:hint="Hey! im active now"
+        android:padding="4dp"
+        android:textSize="20sp" />
 
     <Button
-        android:id="@+id/register_button_id"
+        android:id="@+id/update_profile_button_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/buttons"
-        android:text="Create Account"
-        android:textColor="@android:color/white" />
+        android:text="Update profile"
+        android:textColor="@color/white"
+        android:textAllCaps="false" />
+
 
 </LinearLayout>
