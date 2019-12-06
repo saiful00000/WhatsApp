@@ -43,7 +43,7 @@ public class GroupsFragment extends Fragment {
 
         groupReference = FirebaseDatabase.getInstance().getReference().child("Groups");
         listView = groupFragmentView.findViewById(R.id.group_fragment_list_view_id);
-        arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, arrayList);
+        arrayAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, arrayList );
         retriveGroupsAndShow();
         listView.setAdapter(arrayAdapter);
 
