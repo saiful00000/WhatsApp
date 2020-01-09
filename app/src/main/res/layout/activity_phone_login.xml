@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    tools:context=".PhoneRegisterActivity">
+
+
+    <EditText
+        android:id="@+id/phone_number_et_id"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        android:background="@drawable/inputs"
+        android:hint="  Phone Number"
+        android:padding="4dp"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/send_verification_code_btn_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/buttons"
+        android:text="Send Verification code"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:layout_below="@+id/phone_number_et_id"
+        />
+
+    <EditText
+        android:id="@+id/verification_code_et_id"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="17dp"
+        android:background="@drawable/inputs"
+        android:hint="  Verification Code"
+        android:padding="4dp"
+        android:visibility="invisible"
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/verify_btn_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/buttons"
+        android:text="Veriify"
+        android:textAllCaps="false"
+        android:textColor="@android:color/white"
+        android:visibility="invisible"
+        android:layout_below="@+id/verification_code_et_id"
+        />
+    
+
+</RelativeLayout>

@@ -33,6 +33,17 @@
         android:padding="4dp"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/register_button_id"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/buttons"
+        android:text="Create Account"
+        android:textColor="@android:color/white" />
+
     <TextView
         android:id="@+id/already_registered_tv_id"
         android:layout_width="wrap_content"
@@ -44,15 +55,18 @@
         android:textColor="@color/colorPrimaryDark"
         android:textSize="15sp" />
 
-    <Button
-        android:id="@+id/register_button_id"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/register_with_phone_tv"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/buttons"
-        android:text="Create Account"
-        android:textColor="@android:color/white" />
+        android:layout_gravity="left"
+        android:text="Register with Phone Number."
+        android:textColor="@color/colorPrimaryDark"
+        android:layout_marginLeft="17dp"
+        android:textSize="15sp"
+        android:layout_marginTop="10dp"
+        />
+
+
 
 </LinearLayout>

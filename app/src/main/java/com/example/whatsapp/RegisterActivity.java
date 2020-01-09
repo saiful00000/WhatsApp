@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
  public class RegisterActivity extends AppCompatActivity {
 
     private EditText emailEt, passwordEt;
-    private TextView alreadyRegisteredTv;
+    private TextView alreadyRegisteredTv, registerWithPhoneNumberTv;
     private Button registerBtn;
 
     private ProgressDialog progressDialog;
@@ -41,6 +41,13 @@ import com.google.firebase.database.FirebaseDatabase;
         rootReference = FirebaseDatabase.getInstance().getReference();
 
         initFields();
+
+        registerWithPhoneNumberTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this, PhoneRegisterActivity.class));
+            }
+        });
 
         alreadyRegisteredTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -116,6 +123,7 @@ import com.google.firebase.database.FirebaseDatabase;
         passwordEt = findViewById(R.id.register_password_id);
         registerBtn = findViewById(R.id.register_button_id);
         alreadyRegisteredTv = findViewById(R.id.already_registered_tv_id);
+        registerWithPhoneNumberTv = findViewById(R.id.register_with_phone_tv);
 
         progressDialog = new ProgressDialog(this);
      }
