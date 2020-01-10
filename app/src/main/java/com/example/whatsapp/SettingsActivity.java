@@ -1,7 +1,10 @@
 package com.example.whatsapp;
 
 import android.content.Intent;
+import android.drm.DrmStore;
+import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +18,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -24,6 +31,8 @@ public class SettingsActivity extends AppCompatActivity {
 
     private LinearLayout profileLinearLayout;
     private TextView userNameTv, userStatusTv;
+
+    private CircleImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +47,7 @@ public class SettingsActivity extends AppCompatActivity {
         profileLinearLayout = findViewById(R.id.linearlayut_profile_id);
         userNameTv = findViewById(R.id.user_name_tv_id);
         userStatusTv = findViewById(R.id.user_status_tv_id);
-
+        profileImage = findViewById(R.id.profile_imageview_id);
 
         profileLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
             }
         });
 
+        // retrive user information and set to fields
         getUserInformation();
 
     }
