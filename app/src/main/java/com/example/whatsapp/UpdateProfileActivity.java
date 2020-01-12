@@ -1,7 +1,10 @@
 package com.example.whatsapp;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +16,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -20,9 +25,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -30,26 +39,31 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UpdateProfileActivity extends AppCompatActivity {
 
     private EditText usernameEt, userStatusEt;
-    private CircleImageView userPhoto;
+    private CircleImageView profileImageView;
     private Button updateButton;
-
-    private String currentUserId;
+    ProgressDialog progressDialog;
 
     private FirebaseAuth firebaseAuth;
     private DatabaseReference rootReference;
 
+    private FirebaseStorage storage;
+    private StorageReference storageReference;
 
-    private static final int rqstCode = 1;
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private String currentUserId;
+    private Uri filePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile);
 
-
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserId = firebaseAuth.getCurrentUser().getUid();
         rootReference = FirebaseDatabase.getInstance().getReference();
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
 
         initFields();
 
@@ -62,15 +76,25 @@ public class UpdateProfileActivity extends AppCompatActivity {
             }
         });
 
-        userPhoto.setOnClickListener(new View.OnClickListener() {
+        profileImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gelaryIntent = new Intent();
-                gelaryIntent.setAction(Intent.ACTION_GET_CONTENT);
-                gelaryIntent.setType("image/*");
-                startActivityForResult(gelaryIntent, rqstCode);
+                selectImageUploadToFirebase();
             }
         });
+
+    }
+
+    private void selectImageUploadToFirebase() {
+        // define implicit intent to mobile gelary
+        Intent imageIntent = new Intent();
+        imageIntent.setType("image/*");
+        imageIntent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(
+                Intent.createChooser(
+                        imageIntent,
+                        "Image select from here....")
+                , PICK_IMAGE_REQUEST);
 
     }
 
@@ -78,16 +102,53 @@ public class UpdateProfileActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == rqstCode && resultCode == RESULT_OK && data != null) {
-            Uri imageUri = data.getData();
-            CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.ON)
-                    .setAspectRatio(1,1)
-                    .start(this);
-        }
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            // get the Uri of data
+            filePath = data.getData();
+
+            try {
+                Bitmap bitmap = MediaStore
+                        .Images
+                        .Media
+                        .getBitmap(getContentResolver(), filePath);
+                profileImageView.setImageBitmap(bitmap);
+
+                //calling the uploadImageImage method
+                uploadImageToStorage();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void uploadImageToStorage() {
+        if (filePath != null) {
+            showProgressDialog("Uploading");
+
+            StorageReference ref = storageReference.child("profile_image/"+ currentUserId);
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            Toast.makeText(UpdateProfileActivity.this, "Image uploaded.", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+
+                        }
+                    });
         }
     }
 
@@ -97,9 +158,16 @@ public class UpdateProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    if (dataSnapshot.hasChild("name") && dataSnapshot.hasChild("image")) {
-                        usernameEt.setText(dataSnapshot.child("name").getValue().toString());
-                        userStatusEt.setText(dataSnapshot.child("status").getValue().toString());
+                    if (dataSnapshot.hasChild("name")
+                            && dataSnapshot.hasChild("status") && dataSnapshot.hasChild("image")) {
+                        String userName = dataSnapshot.child("name").getValue().toString();
+                        String userStatus = dataSnapshot.child("status").getValue().toString();
+                        String userImage = dataSnapshot.child("image").getValue().toString();
+
+                        usernameEt.setText(userName);
+                        userStatusEt.setText(userStatus);
+                        Picasso.get().load("http://" + userImage).into(profileImageView);
+
                     } else if (dataSnapshot.hasChild("name") && dataSnapshot.hasChild("status")) {
                         usernameEt.setText(dataSnapshot.child("name").getValue().toString());
                         userStatusEt.setText(dataSnapshot.child("status").getValue().toString());
@@ -142,7 +210,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         sentUserToMainActivity();
                     } else {
                         String errorMsg = task.getException().toString();
-                        Toast.makeText(UpdateProfileActivity.this, "Error : "+ errorMsg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(UpdateProfileActivity.this, "Error : " + errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -164,9 +232,16 @@ public class UpdateProfileActivity extends AppCompatActivity {
     private void initFields() {
         usernameEt = findViewById(R.id.username_et_id);
         userStatusEt = findViewById(R.id.userstatus_et_id);
-        userPhoto = findViewById(R.id.user_pic_imageview_id);
+        profileImageView = findViewById(R.id.user_pic_imageview_id);
         updateButton = findViewById(R.id.update_profile_button_id);
 
 
+        progressDialog = new ProgressDialog(this);
+    }
+
+    private void showProgressDialog(String msg) {
+        progressDialog  = new ProgressDialog(this);
+        progressDialog.setMessage(msg +". . .");
+        progressDialog.show();
     }
 }

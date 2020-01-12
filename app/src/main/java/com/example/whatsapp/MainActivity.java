@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menuitem_find_friend_id:
+                startActivity(new Intent(MainActivity.this, FindFriendActivity.class));
                 return true;
             case R.id.menu_item_create_group_id:
                 requestNewGroup();
