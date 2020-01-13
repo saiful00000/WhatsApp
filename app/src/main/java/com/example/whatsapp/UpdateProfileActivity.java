@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -52,6 +53,7 @@ public class UpdateProfileActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_REQUEST = 1;
     private String currentUserId;
     private Uri filePath;
+    private Uri imageDownLoadUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,13 @@ public class UpdateProfileActivity extends AppCompatActivity {
 
         getUserInformation();
 
+        profileImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                selectImageUploadToFirebase();
+            }
+        });
+
         updateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,12 +85,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
             }
         });
 
-        profileImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImageUploadToFirebase();
-            }
-        });
 
     }
 
@@ -115,9 +118,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
                         .getBitmap(getContentResolver(), filePath);
                 profileImageView.setImageBitmap(bitmap);
 
-                //calling the uploadImageImage method
-                uploadImageToStorage();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -128,28 +128,51 @@ public class UpdateProfileActivity extends AppCompatActivity {
         if (filePath != null) {
             showProgressDialog("Uploading");
 
-            StorageReference ref = storageReference.child("profile_image/"+ currentUserId);
+            final StorageReference ref = storageReference.child("profile_image/" + currentUserId );
+
             ref.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            Toast.makeText(UpdateProfileActivity.this, "Image uploaded.", Toast.LENGTH_SHORT).show();
+                            //progressDialog.dismiss();
+                            Toast.makeText(UpdateProfileActivity.this, "Image uploaded to firebase Storege.", Toast.LENGTH_SHORT).show();
+                            // get the download url of the image
+                            ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    imageDownLoadUrl = uri;
+                                    uploadImageUrlToDatabase(imageDownLoadUrl);
+                                }
+                            });
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-
+                            String errorMsg = e.getMessage().toString();
+                            Toast.makeText(UpdateProfileActivity.this, "Error: "+errorMsg, Toast.LENGTH_SHORT).show();
                         }
                     });
+
         }
+    }
+
+    private void uploadImageUrlToDatabase(Uri imageDownloadUrl) {
+        rootReference.child("Users")
+                .child(currentUserId)
+                .child("profile_image")
+                .setValue(imageDownloadUrl.toString())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(UpdateProfileActivity.this, "Image url saved to database.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String errorMsg = task.getException().toString();
+                            Toast.makeText(UpdateProfileActivity.this, "Error: "+errorMsg, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void getUserInformation() {
@@ -159,14 +182,14 @@ public class UpdateProfileActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     if (dataSnapshot.hasChild("name")
-                            && dataSnapshot.hasChild("status") && dataSnapshot.hasChild("image")) {
+                            && dataSnapshot.hasChild("status") && dataSnapshot.hasChild("profile_image")) {
                         String userName = dataSnapshot.child("name").getValue().toString();
                         String userStatus = dataSnapshot.child("status").getValue().toString();
-                        String userImage = dataSnapshot.child("image").getValue().toString();
+                        String userImage = dataSnapshot.child("profile_image").getValue().toString();
 
                         usernameEt.setText(userName);
                         userStatusEt.setText(userStatus);
-                        Picasso.get().load("http://" + userImage).into(profileImageView);
+                        Picasso.get().load(userImage).into(profileImageView);
 
                     } else if (dataSnapshot.hasChild("name") && dataSnapshot.hasChild("status")) {
                         usernameEt.setText(dataSnapshot.child("name").getValue().toString());
@@ -197,6 +220,8 @@ public class UpdateProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter yur status.", Toast.LENGTH_SHORT).show();
             userStatusEt.requestFocus();
         } else {
+            //calling the uploadImageImage method
+            uploadImageToStorage();
             HashMap<String, String> profileMap = new HashMap<>();
             profileMap.put("uid", currentUserId);
             profileMap.put("name", userName);
@@ -234,7 +259,6 @@ public class UpdateProfileActivity extends AppCompatActivity {
         userStatusEt = findViewById(R.id.userstatus_et_id);
         profileImageView = findViewById(R.id.user_pic_imageview_id);
         updateButton = findViewById(R.id.update_profile_button_id);
-
 
         progressDialog = new ProgressDialog(this);
     }
