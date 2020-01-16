@@ -1,10 +1,7 @@
 package com.example.whatsapp;
 
 import android.content.Intent;
-import android.drm.DrmStore;
-import android.net.Uri;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +15,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -67,9 +63,16 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
-                    if (dataSnapshot.hasChild("name") && dataSnapshot.hasChild("image")) {
-                        userNameTv.setText(dataSnapshot.child("name").getValue().toString());
-                        userStatusTv.setText(dataSnapshot.child("status").getValue().toString());
+                    if (dataSnapshot.hasChild("name") && dataSnapshot.hasChild("status")
+                            && dataSnapshot.hasChild("profile_image")) {
+                        String userName = dataSnapshot.child("name").getValue().toString();
+                        String userStatus = dataSnapshot.child("status").getValue().toString();
+                        String userImage = dataSnapshot.child("profile_image").getValue().toString();
+
+                        userNameTv.setText(userName);
+                        userStatusTv.setText(userStatus);
+                        Picasso.get().load(userImage).into(profileImage);
+
                     } else if (dataSnapshot.hasChild("name") && dataSnapshot.hasChild("status")) {
                         userNameTv.setText(dataSnapshot.child("name").getValue().toString());
                         userStatusTv.setText(dataSnapshot.child("status").getValue().toString());
