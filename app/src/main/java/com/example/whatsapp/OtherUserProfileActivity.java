@@ -160,11 +160,40 @@ public class OtherUserProfileActivity extends AppCompatActivity {
                     if (currentState.equals("request_received")) {
                         acceptChatRequest();
                     }
+
+                    if (currentState == "friends") {
+                        removeSpacificContacts();
+                    }
                 }
             });
         } else {
             sendMessageRequestBtn.setVisibility(View.INVISIBLE);
         }
+    }
+
+    private void removeSpacificContacts() {
+        contactsReference.child(senderUserId).child(receiverUserId)
+                .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    contactsReference.child(receiverUserId).child(senderUserId)
+                            .removeValue().addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                sendMessageRequestBtn.setEnabled(true);
+                                currentState = "new";
+                                sendMessageRequestBtn.setText("Send Chat Request");
+
+                                cancelMessageRequestBtn.setVisibility(View.INVISIBLE);
+                                cancelMessageRequestBtn.setEnabled(false);
+                            }
+                        }
+                    });
+                }
+            }
+        });
     }
 
 
