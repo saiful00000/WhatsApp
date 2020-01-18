@@ -291,15 +291,3 @@ public class OtherUserProfileActivity extends AppCompatActivity {
                 });
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-

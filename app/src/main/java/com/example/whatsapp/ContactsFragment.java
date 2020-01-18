@@ -83,13 +83,13 @@ public class ContactsFragment extends Fragment {
 
                             Picasso.get().load(image).into(holder.userImageView);
                             holder.usernameTv.setText(name);
-                            holder.usernameTv.setText(status);
+                            holder.userStatusTv.setText(status);
                         } else {
                             String name = dataSnapshot.child("name").getValue().toString();
                             String status = dataSnapshot.child("status").getValue().toString();
 
                             holder.usernameTv.setText(name);
-                            holder.usernameTv.setText(status);
+                            holder.userStatusTv.setText(status);
                         }
                     }
 

@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import com.example.whatsapp.ChatsFragment;
 import com.example.whatsapp.ContactsFragment;
 import com.example.whatsapp.GroupsFragment;
+import com.example.whatsapp.RequestsFragment;
 
 public class TabsAccessAdapter extends FragmentPagerAdapter {
 
@@ -29,6 +30,9 @@ public class TabsAccessAdapter extends FragmentPagerAdapter {
             case 2:
                 ContactsFragment contactsFragment = new ContactsFragment();
                 return contactsFragment;
+            case 3:
+                RequestsFragment requestsFragment = new RequestsFragment();
+                return requestsFragment;
             default:
                 return null;
         }
@@ -38,7 +42,7 @@ public class TabsAccessAdapter extends FragmentPagerAdapter {
     // return total page count
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 
 
@@ -53,6 +57,8 @@ public class TabsAccessAdapter extends FragmentPagerAdapter {
                 return "Groups";
             case 2:
                 return "Contacts";
+            case 3:
+                return "Requests";
             default:
                 return null;
         }
