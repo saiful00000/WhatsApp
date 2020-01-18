@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private LinearLayout profileLinearLayout;
     private TextView userNameTv, userStatusTv;
+    private Toolbar toolbar;
 
     private CircleImageView profileImage;
 
@@ -44,6 +46,12 @@ public class SettingsActivity extends AppCompatActivity {
         userNameTv = findViewById(R.id.user_name_tv_id);
         userStatusTv = findViewById(R.id.user_status_tv_id);
         profileImage = findViewById(R.id.profile_imageview_id);
+
+        toolbar = findViewById(R.id.setting_activity_toolbar_id);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Find Friends");
 
         profileLinearLayout.setOnClickListener(new View.OnClickListener() {
             @Override
