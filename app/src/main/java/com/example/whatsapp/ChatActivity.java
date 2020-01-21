@@ -26,7 +26,7 @@ public class ChatActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle(".............");
 
-
+// dfsgh
 
 
     }
