@@ -1,6 +1,7 @@
 package com.example.whatsapp;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -86,18 +87,28 @@ public class ChatsFragment extends Fragment {
                 usersReference.child(usersId).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            if (dataSnapshot.hasChild("profile_image")) {
+                                final String image = dataSnapshot.child("profile_image").getValue().toString();
+                                Picasso.get().load(image).into(holder.userImageView);
+                            }
 
-                        if (dataSnapshot.hasChild("profile_image")) {
-                            final String image = dataSnapshot.child("profile_image").getValue().toString();
-                            Picasso.get().load(image).into(holder.userImageView);
+                            final String name = dataSnapshot.child("name").getValue().toString();
+                            final String status = dataSnapshot.child("status").getValue().toString();
+
+                            holder.usernameTv.setText(name);
+                            holder.userStatusTv.setText("");
+
+                            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    Intent intent = new Intent(getContext(), ChatActivity.class);
+                                    intent.putExtra("visitUserId", usersId);
+                                    intent.putExtra("visitUserName", name);
+                                    startActivity(intent);
+                                }
+                            });
                         }
-
-                        final String name = dataSnapshot.child("name").getValue().toString();
-                        final String status = dataSnapshot.child("status").getValue().toString();
-
-                        holder.usernameTv.setText(name);
-                        holder.userStatusTv.setText("");
-
                     }
 
                     @Override
