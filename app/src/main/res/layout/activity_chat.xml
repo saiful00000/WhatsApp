@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
     tools:context=".ChatActivity">
 
 
@@ -27,6 +28,7 @@
         android:weightSum="10">
 
         <EditText
+            android:background="@android:drawable/editbox_background"
             android:id="@+id/input_personal_massage_et_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -36,6 +38,7 @@
             android:padding="17dp" />
 
         <LinearLayout
+            android:background="@android:drawable/editbox_background"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
