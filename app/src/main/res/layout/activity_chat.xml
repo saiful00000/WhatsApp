@@ -9,7 +9,7 @@
 
     <include
         android:id="@+id/chat_activity_toolbar_id"
-        layout="@layout/main_appbar_layout"></include>
+        layout="@layout/app_bar_layout"></include>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/personal_msg_list_rv_id"

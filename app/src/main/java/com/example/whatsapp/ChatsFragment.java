@@ -39,6 +39,7 @@ public class ChatsFragment extends Fragment {
 
 
     private String currentUserId;
+    private String image = "default_image";
 
     public ChatsFragment() {
         // Required empty public constructor
@@ -89,7 +90,7 @@ public class ChatsFragment extends Fragment {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if (dataSnapshot.exists()) {
                             if (dataSnapshot.hasChild("profile_image")) {
-                                final String image = dataSnapshot.child("profile_image").getValue().toString();
+                                image = dataSnapshot.child("profile_image").getValue().toString();
                                 Picasso.get().load(image).into(holder.userImageView);
                             }
 
@@ -105,6 +106,7 @@ public class ChatsFragment extends Fragment {
                                     Intent intent = new Intent(getContext(), ChatActivity.class);
                                     intent.putExtra("visitUserId", usersId);
                                     intent.putExtra("visitUserName", name);
+                                    intent.putExtra("visitUserImage", image);
                                     startActivity(intent);
                                 }
                             });
