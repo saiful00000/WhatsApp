@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="56dp"
     android:background="@color/colorPrimary"
-    android:gravity="center"
+    android:gravity="start"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <!--<de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/receiver_profile_image_view_id"
         android:layout_width="45dp"
         android:layout_height="45dp"
@@ -14,7 +14,7 @@
         android:layout_alignParentEnd="true"
         android:layout_marginRight="10dp"
         android:cropToPadding="true"
-        android:src="@drawable/edit_profile" />
+        android:src="@drawable/edit_profile" />-->
 
     <TextView
         android:id="@+id/receiver_profile_name_tv_id"

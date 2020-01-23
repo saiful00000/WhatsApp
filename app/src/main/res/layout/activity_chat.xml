@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
     tools:context=".ChatActivity">
 
 
@@ -16,6 +15,7 @@
         android:id="@+id/personal_msg_list_rv_id"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/linear_layout_id"
         android:layout_below="@id/chat_activity_toolbar_id" />
 
     <LinearLayout

@@ -1,40 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    >
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/msg_sender_profile_image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_margin="10sp"
-        android:src="@drawable/ic_account_circle_black_24dp" />
+    <LinearLayout
+        android:id="@+id/linear_layout_id"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/msg_receiver_profile_image"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_account_circle_black_24dp"
+            />
+
+        <TextView
+            android:id="@+id/receiver_msg_text_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/receiver_msg_layout"
+            android:padding="5dp"
+            android:text="i am receiver"
+            android:textColor="@color/black"
+            android:textSize="13sp" />
+
+    </LinearLayout>
 
     <TextView
-        android:id="@+id/receiver_msg_text"
+        android:id="@+id/sender_msg_text_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_margin="10dp"
-        android:layout_toEndOf="@+id/msg_sender_profile_image"
-        android:padding="10dp"
-        android:text="i am receiver"
-        android:background="@drawable/receiver_msg_layout"
-        android:textSize="13sp"
-        android:textColor="@color/black"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/sender_msg_id"
+        android:layout_alignParentTop="@+id/linear_layout_id"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="10dp"
-        android:layout_alignParentTop="@+id/receiver_msg_text"
-        android:text="i am sender"
         android:background="@drawable/sender_msg_layout"
-        android:padding="10dp"
-        android:textSize="13sp"
+        android:padding="5dp"
+        android:text="i am sender"
         android:textColor="@color/black"
-        />
+        android:textSize="13sp" />
 
 </RelativeLayout>
