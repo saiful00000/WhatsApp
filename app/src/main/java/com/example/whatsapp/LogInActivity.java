@@ -75,6 +75,9 @@ public class LogInActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
+                                String currentUserId = firebaseAuth.getCurrentUser().getUid();
+                                String deviceTocked ;
+
                                 progressDialog.dismiss();
                                 sentUserToMainActivity();
                             } else {
